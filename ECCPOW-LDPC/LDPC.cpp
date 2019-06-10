@@ -31,7 +31,6 @@ LDPC::~LDPC()
 void LDPC::decoding()
 {
 	double temp3, temp_sign, sign, magnitude;
-	int sum = 0;
 	memset(this->output_word, NULL, sizeof(int)*this->n);
 	
 	// Initialization
@@ -113,7 +112,7 @@ int  LDPC::generate_seed(char phv[32])
 }
 void LDPC::generate_hv(const unsigned char header_with_nonce[])
 {	
-	int input_size = strlen((char *)header_with_nonce);		
+	unsigned long input_size = strlen((char *)header_with_nonce);
 	memset((void*)this->hash_vector, NULL, sizeof(unsigned char)*this->n);
 	memset((void*)this->tmp_hash_vector, NULL, sizeof(unsigned char)*32);
 
@@ -206,7 +205,7 @@ void LDPC::print_word(const char name[], int type)
 	int *ptr = NULL;
 	FILE *fp;
 	if (name)
-		fopen_s(&fp, name, "w");
+		fp = fopen(name, "w");
 	else
 		fp = stdout;
 
@@ -237,7 +236,7 @@ void LDPC::print_H(const char name[])
 {
 	FILE *fp;
 	if (name)
-		fopen_s(&fp, name, "w");
+		fp = fopen(name, "w");
 	else
 		fp = stdout;
 	fprintf(fp, "The value of seed : %d\n", this->seed);
@@ -257,27 +256,27 @@ void LDPC::print_Q(const char name[], int type)
 {
 	FILE *fp;
 	if (name)
-		fopen_s(&fp, name, "w");
+		fp = fopen(name, "w");
 	else
 		fp = stdout;
 	if (type == 1)
 	{
-		fprintf_s(fp, "\nThe row_in_col_matrix\n");
+		fprintf(fp, "\nThe row_in_col_matrix\n");
 		for (int i = 0; i < this->wc; i++)
 		{
 			for (int j = 0; j < this->n; j++)
-				fprintf_s(fp, "%d\t", this->row_in_col[i][j] + 1);
+				fprintf(fp, "%d\t", this->row_in_col[i][j] + 1);
 			fprintf(fp, "\n");
 		}
 	}
 	else if (type == 2)
 	{
-		fprintf_s(fp, "\nThe col_in_row_matrix\n");
+		fprintf(fp, "\nThe col_in_row_matrix\n");
 		for (int i = 0; i < this->wr; i++)
 		{
 			for (int j = 0; j < this->m; j++)
-				fprintf_s(fp, "%d\t", this->col_in_row[i][j] + 1);
-			fprintf_s(fp, "\n");
+				fprintf(fp, "%d\t", this->col_in_row[i][j] + 1);
+			fprintf(fp, "\n");
 		}
 	}
 	if (name)
@@ -322,7 +321,8 @@ bool LDPC::is_regular(int n, int wc, int wr)
 
 bool LDPC::initialization()
 {
-	Delete_2D_Array((void**)this->H, this->m);
+  /*
+  Delete_2D_Array((void**)this->H, this->m);
 	Delete_2D_Array((void**)this->col_in_row, this->wr);
 	Delete_2D_Array((void**)this->row_in_col, this->wc);
 	
@@ -333,6 +333,7 @@ bool LDPC::initialization()
 
 	Delete_1D_Array((void*)this->hash_vector);
 	Delete_1D_Array((void*)this->output_word);
+  */
 
 	this->H = Allocate_2D_Array_Int(this->m, this->n, "No sufficient memory for H");
 	this->col_in_row = Allocate_2D_Array_Int(this->wr, this->m, "No sufficient memory for Q1_col_in_row");
